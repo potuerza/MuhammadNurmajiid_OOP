@@ -45,7 +45,7 @@ public class Enemy {
 
     public boolean isAlive() {
         // 1. Return true if hp > 0, and false otherwise
-        if (Enemy.hp > 0) {
+        if (hp > 0) {
             return true;
         } else {
             return false;
