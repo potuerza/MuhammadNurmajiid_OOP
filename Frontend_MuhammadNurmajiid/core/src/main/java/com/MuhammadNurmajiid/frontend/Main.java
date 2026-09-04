@@ -1,37 +1,29 @@
 package com.MuhammadNurmajiid.frontend;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
+public class Test {
+    public static void main(String[] args) {
+        System.out.println("=== TOUHOU OOP PRACTICUM - MODULE 1: BASIC CLASSES & OBJECT INTERACTION ===");
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
-public class Main extends ApplicationAdapter {
-    Player Reimu = new Player("Reimu Hakurei", 100, 15, 3 );
-    Enemy Cirno = new Enemy("Cirno", 50 );
+        // Instantiating objects (Player and Enemy)
+        Player reimu = new Player("Reimu Hakurei", 100, 15, 3);
+        Enemy fairyBoss = new Enemy("Cirno (Stage 2 Boss)", 50);
 
-    private SpriteBatch batch;
-    private Texture image;
+        System.out.println("\n--- Initial Battle State ---");
+        System.out.println("Player: " + reimu.name + " | HP: " + reimu.hp + " | Power: " + reimu.power + " | SpellCards: " + reimu.spellCards);
+        System.out.println("Enemy:  " + fairyBoss.name + " | HP: " + fairyBoss.hp);
 
-    @Override
-    public void create() {
-        batch = new SpriteBatch();
-        image = new Texture("libgdx.png");
-    }
+        System.out.println("\n--- Turn 1: Player Shoots Enemy ---");
+        reimu.shoot(fairyBoss);
 
-    @Override
-    public void render() {
-        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-        batch.begin();
-        batch.draw(image, 140, 210);
-        batch.end();
-    }
+        System.out.println("\n--- Turn 2: Enemy Counter-attacks ---");
+        fairyBoss.attack(reimu, 30);
 
-    @Override
-    public void dispose() {
-        batch.dispose();
-        image.dispose();
+        System.out.println("\n--- Turn 3: Player Shoots Enemy Finishing Blow ---");
+        reimu.shoot(fairyBoss);
+
+        System.out.println("\n--- Turn 4: Enemy Deals Fatal Damage to Reimu ---");
+        fairyBoss.attack(reimu, 80);
+
+        System.out.println("\n=== Battle Simulation Complete ===");
     }
 }
