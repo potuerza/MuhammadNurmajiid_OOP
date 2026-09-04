@@ -24,7 +24,7 @@ public class Enemy {
 
         // 3. If HP is still greater than 0, display the remaining HP in the format: [PlayerName] took [damage] damage! Remaining HP: [hp]
         if (hp > 0) {
-            System.out.println(name + "Took" + Enemy.damage "Damage!" + "Remaining HP = " + hp);
+            System.out.println(name + "Took" + damage "Damage!" + "Remaining HP = " + hp);
 
         }
 
@@ -37,7 +37,7 @@ public class Enemy {
     public void attack(Player player, int damage) {
             damage = damage + 10;
             // 1. Display information that the Enemy is attacking the Player, in the format: [EnemyName] unleashes bullet barrage on [PlayerName]!
-            System.out.println(name + "Shoots" + Player.takeDamage + "Dealing" + damage "DMG!");
+            System.out.println(name + "Unleash Damage" + damage + "Dealing" + damage "DMG!");
 
             // 2. Call the Player's takeDamage() method using the given damage.
 

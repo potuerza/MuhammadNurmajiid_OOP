@@ -43,7 +43,7 @@ public class Player {
         // 1. Create an int named damage, calculated by adding 10 to power.
 
         // 2. Display information that the Player is shooting the Enemy, in the format: [name] shoots [TargetName] dealing [damage] DMG!
-        System.out.println(name + "Shoots" + Enemy.name + "Dealing" + Enemy.target "DMG!");
+        System.out.println(name + "Shoots" + hp + "Dealing" + damage "DMG!");
 
         // 3. Call the Enemy object's takeDamage() method.
         Enemy.takeDamage();
