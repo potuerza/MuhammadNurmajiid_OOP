@@ -1,2 +1,2 @@
-# This is a Test before CS pls
+# Testing and Preaparing for CS2
 

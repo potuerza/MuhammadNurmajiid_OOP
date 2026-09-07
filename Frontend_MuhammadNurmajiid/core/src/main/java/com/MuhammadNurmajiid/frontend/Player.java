@@ -7,19 +7,20 @@ public class Player {
     int hp;
     int power;
     int spellCards;
-    int maxHp = hp;
+    int maxHp;
 
     public Player(String PN, int PHP, int PPP, int PSC) {
         name = PN;
         hp = PHP;
         power = PPP;
         spellCards = PSC;
+        maxHp = PHP;
 
     }
 
     public void TakeDamage(int damage) {
         // 1. Reduce hp by the damage value.
-        damage = hp - damage;
+        hp = hp - damage;
 
         // 2. HP must not become negative.
         if (hp < 0){
@@ -28,7 +29,7 @@ public class Player {
 
         // 3. If HP is still greater than 0, display the remaining HP in the format: [PlayerName] took [damage] damage! Remaining HP: [hp]
         if (hp > 0 ){
-            System.out.println(name + "Took" + damage "Damage!" + "Remaining HP = " + hp/maxHp);
+            System.out.println(name + "Took" + damage + "Damage!" + "Remaining HP = " + hp + "/" + maxHp);
 
         }
 
@@ -43,10 +44,10 @@ public class Player {
         // 1. Create an int named damage, calculated by adding 10 to power.
 
         // 2. Display information that the Player is shooting the Enemy, in the format: [name] shoots [TargetName] dealing [damage] DMG!
-        System.out.println(name + "Shoots" + hp + "Dealing" + damage "DMG!");
+        System.out.println(name + "Shoots" + hp + "Dealing" + target.name + "DMG!");
 
         // 3. Call the Enemy object's takeDamage() method.
-        Enemy.takeDamage();
+        target.TakeDamage(damage);
     }
     public boolean isAlive() {
         // 1. Return true if hp > 0, and false otherwise
