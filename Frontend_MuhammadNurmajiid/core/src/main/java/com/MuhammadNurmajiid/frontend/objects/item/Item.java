@@ -1,12 +1,16 @@
 package com.MuhammadNurmajiid.frontend.objects.item;
+import com.MuhammadNurmajiid.frontend.objects.Collidable;
 import com.MuhammadNurmajiid.frontend.objects.GameObject;
 
+import com.MuhammadNurmajiid.frontend.objects.Player;
 import com.badlogic.gdx.graphics.Color;
 
     public class Item extends GameObject {
         private String itemType;
         private long scoreValue;
         private ItemType itemTypeEnum;
+
+
 
         public Item(float x, float y, String itemType) {
             super(x, y, 16, 16, 100f, Color.WHITE);
@@ -56,4 +60,13 @@ import com.badlogic.gdx.graphics.Color;
         public void update(float delta) {
             this.y -= speed * delta;
         }
+
+        @Override
+        public void onCollision(Collidable other) {
+            if (other instanceof Player) {
+
+                // Item pickup is handled on the Player side via collectItem()
+            }
+        }
+
     }
