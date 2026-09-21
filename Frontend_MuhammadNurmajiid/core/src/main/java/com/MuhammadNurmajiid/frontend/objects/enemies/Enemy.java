@@ -1,15 +1,15 @@
 package com.MuhammadNurmajiid.frontend.objects.enemies;
 
-import com.MuhammadNurmajiid.frontend.objects.Collidable;
-import com.MuhammadNurmajiid.frontend.objects.Player;
-import com.MuhammadNurmajiid.frontend.objects.GameObject;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Rectangle;
+import com.MuhammadNurmajiid.frontend.objects.Collidable;
+import com.MuhammadNurmajiid.frontend.objects.GameObject;
+import com.MuhammadNurmajiid.frontend.objects.Player;
+import com.MuhammadNurmajiid.frontend.objects.item.Item;
 
 public class Enemy extends GameObject {
-    private String name;
-    private int hp;
-    private int maxHp;
+    protected String name;
+    protected int hp;
+    protected int maxHp;
     protected long scoreValue;
 
     public Enemy(String name, int hp) {
@@ -17,7 +17,7 @@ public class Enemy extends GameObject {
         this.name = name;
         this.hp = hp;
         this.maxHp = hp;
-        this.scoreValue = 100L;
+        this.scoreValue = 100;
     }
 
     public Enemy(float x, float y, float width, float height, Color color, String name, int hp, long scoreValue) {
@@ -28,74 +28,35 @@ public class Enemy extends GameObject {
         this.scoreValue = scoreValue;
     }
 
-    public void setHp(int hp) {
-        this.hp = Math.max(0, hp);
-    }
-
-    public int getHp() {
-        return this.hp;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public int getMaxHp() {
-        return this.maxHp;
-    }
-
-    public void setScoreValue(long scoreValue) {
-        this.scoreValue = scoreValue;
-    }
-
-    public long getScoreValue() {
-        return this.scoreValue;
-    }
-
     public boolean takeDamage(int damage) {
-        if (getHp() <= 0) {
-            return false;
-        }
-
-        int oldHp = getHp();
+        boolean wasAlive = isAlive();
         setHp(getHp() - damage);
-
-        if (oldHp > 0 && getHp() == 0) {
-            System.out.print(getName() + " was defeated!");
+        System.out.println(getName() + " took " + damage + " damage! HP: " + getHp() + "/" + getMaxHp());
+        if (wasAlive && getHp() == 0) {
+            System.out.println(getName() + " was defeated!");
             return true;
         }
-        else {
-            System.out.print(getName() + " took " + damage + " damage! HP: " + getHp() + "/" + getMaxHp());
-            return false;
-        }
+        return false;
     }
 
     public void attack(Player player, int damage) {
-        System.out.print(getName() + " unleashes bullet barrage on " + player.getName());
+        System.out.println(name + " unleashes bullet barrage on " + player.getName() + "!");
         player.takeDamage(damage);
     }
 
     public boolean isAlive() {
-        if (getHp() > 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return this.hp > 0;
     }
 
-    @Override
-    public Rectangle getGrazeHitbox() {
-        return null;
-    }
+    // Encapsulation getters and setters
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    @Override
-    public void onCollision(Collidable other) {
+    public int getHp() { return hp; }
+    public void setHp(int hp) { this.hp = Math.max(0, hp); }
 
-    }
+    public int getMaxHp() { return maxHp; }
+
+    public long getScoreValue() { return scoreValue; }
+    public void setScoreValue(long scoreValue) { this.scoreValue = scoreValue; }
 }
-

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
         private String itemType;
         private long scoreValue;
         private ItemType itemTypeEnum;
+        private boolean collected;
 
 
 
@@ -16,18 +17,23 @@ import com.badlogic.gdx.graphics.Color;
             super(x, y, 16, 16, 100f, Color.WHITE);
             this.itemType = itemType;
             this.scoreValue = 1000L;
+            this.collected = false;
         }
 
         public Item(float x, float y, float width, float height, float speed, String itemType) {
             super(x, y, width, height, speed, Color.WHITE);
             this.itemType = itemType;
             this.scoreValue = 1000L;
+            this.collected = false;
+
         }
 
         public Item(float x, float y, float width, float height, float speed, String itemType, long scoreValue) {
             super(x, y, width, height, speed, Color.WHITE);
             this.itemType = itemType;
             this.scoreValue = scoreValue;
+            this.collected = false;
+
         }
 
         public Item(float x, float y, ItemType itemTypeEnum) {
@@ -35,6 +41,8 @@ import com.badlogic.gdx.graphics.Color;
             this.itemTypeEnum = itemTypeEnum;
             this.itemType = itemTypeEnum.name();
             this.scoreValue = itemTypeEnum.getScoreValue();
+            this.collected = false;
+
         }
 
         public Item(float x, float y, float width, float height, float speed, ItemType itemTypeEnum, long scoreValue) {
@@ -42,6 +50,16 @@ import com.badlogic.gdx.graphics.Color;
             this.itemTypeEnum = itemTypeEnum;
             this.itemType = itemTypeEnum.name();
             this.scoreValue = scoreValue;
+            this.collected = false;
+
+        }
+
+        public boolean isCollected() {
+            return collected;
+        }
+
+        public void setCollected(boolean collected) {
+            this.collected = collected;
         }
 
         public String getItemType() {

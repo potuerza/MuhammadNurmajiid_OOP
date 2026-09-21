@@ -1,6 +1,5 @@
 package com.MuhammadNurmajiid.frontend.objects;
 
-import com.MuhammadNurmajiid.frontend.objects.Collidable;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
@@ -22,58 +21,15 @@ public abstract class GameObject implements Collidable {
         this.color = color;
     }
 
-    public float getX() {
-        return x;
+    public void update(float delta) {
+        // Base update method
     }
 
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    public float getWidth() {
-        return width;
-    }
-
-    public void setWidth(float width) {
-        if (width > 0) {
-            this.width = width;
+    public void render(ShapeRenderer shapeRenderer) {
+        if (shapeRenderer != null && color != null) {
+            shapeRenderer.setColor(color);
+            shapeRenderer.rect(x, y, width, height);
         }
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
-    public void setHeight(float height) {
-        if (height > 0) {
-            this.height = height;
-        }
-    }
-
-    public float getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(float speed) {
-        if (speed >= 0) {
-            this.speed = speed;
-        }
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
     }
 
     @Override
@@ -83,19 +39,37 @@ public abstract class GameObject implements Collidable {
 
     @Override
     public Rectangle getGrazeHitbox() {
+        // Graze hitbox is slightly larger than core hitbox (+10px padding)
         return new Rectangle(x - 10, y - 10, width + 20, height + 20);
     }
 
     @Override
     public void onCollision(Collidable other) {
-        // Base collision handler (can be overridden by subclasses that need to react)
+        // Base collision handler (can be overridden by subclasses)
     }
 
-    public void update(float delta) {
+    // Encapsulation: Getters and Setters
+    public float getX() { return x; }
+    public void setX(float x) { this.x = x; }
+
+    public float getY() { return y; }
+    public void setY(float y) { this.y = y; }
+
+    public float getWidth() { return width; }
+    public void setWidth(float width) {
+        if (width > 0) this.width = width;
     }
 
-    public void render(ShapeRenderer shapeRenderer) {
-        shapeRenderer.setColor(color);
-        shapeRenderer.rect(x, y, width, height);
+    public float getHeight() { return height; }
+    public void setHeight(float height) {
+        if (height > 0) this.height = height;
     }
+
+    public float getSpeed() { return speed; }
+    public void setSpeed(float speed) {
+        if (speed >= 0) this.speed = speed;
+    }
+
+    public Color getColor() { return color; }
+    public void setColor(Color color) { this.color = color; }
 }

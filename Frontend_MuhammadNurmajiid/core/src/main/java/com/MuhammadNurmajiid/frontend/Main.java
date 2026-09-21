@@ -9,6 +9,7 @@ import com.MuhammadNurmajiid.frontend.objects.Player;
 import com.MuhammadNurmajiid.frontend.objects.GameObject;
 import com.MuhammadNurmajiid.frontend.objects.item.ItemType;
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -59,12 +60,21 @@ public class Main extends ApplicationAdapter {
                 GameObject a = entities.get(i);
                 GameObject b = entities.get(j);
                 if(a.getCoreHitbox().overlaps(b.getCoreHitbox())){
-                    a.onCollision(a);
-                    b.onCollision(b);
+                    a.onCollision(b);
+                    b.onCollision(a);
                 }
                 // TODO: Check whether getCoreHitbox() of a and b overlap (use the .overlaps() method of Rectangle)
                 // TODO: Call a.onCollision(b) and b.onCollision(a)
             }
+        }
+
+
+        if(pointItem.isCollected()){
+            entities.remove(pointItem);
+        }
+
+        if(powerItem.isCollected()){
+            entities.remove(powerItem);
         }
 
         // AABB Collision detection between every unique entity pair
@@ -84,7 +94,5 @@ public class Main extends ApplicationAdapter {
             shapeRenderer.dispose();
         }
     }
-
-
 }
 
