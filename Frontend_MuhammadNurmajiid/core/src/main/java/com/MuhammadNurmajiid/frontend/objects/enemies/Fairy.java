@@ -32,8 +32,6 @@ public class Fairy extends Enemy {
                 collisionCooldown = 1;
             }
         }
-        // TODO: Check whether the other received by this method is a Player
-        // TODO: Print "Player touches fairy"
     }
 
 }

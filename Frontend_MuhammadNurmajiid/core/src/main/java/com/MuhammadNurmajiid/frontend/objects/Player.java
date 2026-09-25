@@ -8,6 +8,8 @@ import com.MuhammadNurmajiid.frontend.objects.item.ItemType;
 import com.MuhammadNurmajiid.frontend.objects.enemies.Boss;
 import com.MuhammadNurmajiid.frontend.objects.enemies.Enemy;
 import com.MuhammadNurmajiid.frontend.objects.enemies.Fairy;
+import com.MuhammadNurmajiid.frontend.objects.bullets.Bullet;
+
 
 public class Player extends GameObject {
     private String name;
@@ -82,8 +84,20 @@ public class Player extends GameObject {
         }
     }
 
+    public Bullet shootBullet() {
+        int damage = 10 + power;
+        System.out.println(name + " shoots bullet dealing " + damage + " DMG!");
+        return new Bullet(x + width/2 - 4, y + height, BulletType.AMULET, damage);
+
+        // TODO: return a new Bullet positioned at the top-center of the Player
+        // (x + width/2 - 4, y + height), with BulletType.AMULET as its type,
+        // and the damage calculated above
+    }
+
+
     public void collectItem(Item item) {
         ItemType type = item.getItemTypeEnum();
+        if (item.isDestroyed()) return;
         if (type != null) {
             switch (type) {
                 case POWER -> {
@@ -105,11 +119,14 @@ public class Player extends GameObject {
                     addScore(item.getScoreValue());
                     System.out.println(name + " collected LIFE item! HP: " + hp);
                 }
+
             }
         } else {
             addScore(item.getScoreValue());
             System.out.println(name + " collected " + item.getItemType() + "!");
         }
+        item.destroy();
+
     }
 
     public void takeDamage(int damage) {

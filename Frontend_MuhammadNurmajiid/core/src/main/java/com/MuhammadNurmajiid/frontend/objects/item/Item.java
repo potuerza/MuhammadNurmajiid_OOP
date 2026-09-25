@@ -82,7 +82,6 @@ import com.badlogic.gdx.graphics.Color;
         @Override
         public void onCollision(Collidable other) {
             if (other instanceof Player) {
-
                 // Item pickup is handled on the Player side via collectItem()
             }
         }

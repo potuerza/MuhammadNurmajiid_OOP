@@ -11,6 +11,7 @@ public abstract class GameObject implements Collidable {
     protected float height;
     protected float speed;
     protected Color color;
+    protected boolean active = true;
 
     public GameObject(float x, float y, float width, float height, float speed, Color color) {
         this.x = x;
@@ -26,10 +27,18 @@ public abstract class GameObject implements Collidable {
     }
 
     public void render(ShapeRenderer shapeRenderer) {
-        if (shapeRenderer != null && color != null) {
+        if (shapeRenderer != null && color != null && active) {
             shapeRenderer.setColor(color);
             shapeRenderer.rect(x, y, width, height);
         }
+    }
+
+    public boolean isDestroyed() {
+        return !active;
+    }
+
+    public void destroy() {
+        active = false;
     }
 
     @Override
@@ -47,6 +56,7 @@ public abstract class GameObject implements Collidable {
     public void onCollision(Collidable other) {
         // Base collision handler (can be overridden by subclasses)
     }
+
 
     // Encapsulation: Getters and Setters
     public float getX() { return x; }
@@ -72,4 +82,13 @@ public abstract class GameObject implements Collidable {
 
     public Color getColor() { return color; }
     public void setColor(Color color) { this.color = color; }
+
+    public boolean isOffScreen(float screenWidth, float screenHeight) {
+        final float offlimit = 50f;
+        return x < -offlimit || x > screenWidth*screenHeight || y < -offlimit || y > screenHeight*screenWidth;
+        // Use a 50px tolerance margin on each side, so objects that have only
+        // slightly passed the edge of the screen are not immediately considered gone.
+    }
+
 }
+
