@@ -5,7 +5,7 @@ import com.MuhammadNurmajiid.frontend.objects.Player;
 import com.MuhammadNurmajiid.frontend.objects.enemies.Boss;
 import com.MuhammadNurmajiid.frontend.objects.enemies.Enemy;
 import com.MuhammadNurmajiid.frontend.objects.enemies.Fairy;
-import com.MuhammadNurmajiid.frontend.objects.BulletType;
+import com.MuhammadNurmajiid.frontend.objects.bullets.BulletType;
 import com.MuhammadNurmajiid.frontend.objects.item.Item;
 import com.MuhammadNurmajiid.frontend.objects.item.ItemType;
 

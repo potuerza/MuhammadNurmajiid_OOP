@@ -1,8 +1,13 @@
 package com.MuhammadNurmajiid.frontend.objects;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+
+
 
 public abstract class GameObject implements Collidable {
     protected float x;
@@ -12,6 +17,11 @@ public abstract class GameObject implements Collidable {
     protected float speed;
     protected Color color;
     protected boolean active = true;
+
+    protected TextureRegion sprite;
+    protected Animation<TextureRegion> animation;
+    protected float stateTime = 0f;
+
 
     public GameObject(float x, float y, float width, float height, float speed, Color color) {
         this.x = x;
@@ -23,7 +33,19 @@ public abstract class GameObject implements Collidable {
     }
 
     public void update(float delta) {
-        // Base update method
+        // TODO: Increase the object's internal time so its animation advances
+        stateTime += delta;
+    }
+
+    public void render(SpriteBatch batch) {
+        if (batch != null && active) {
+            if (animation != null) {
+                TextureRegion currentFrame = animation.getKeyFrame(stateTime, true);
+                batch.draw(currentFrame, x, y, width, height);
+            } else if (sprite != null) {
+                batch.draw(sprite, x, y, width, height);
+            }
+        }
     }
 
     public void render(ShapeRenderer shapeRenderer) {
@@ -32,6 +54,9 @@ public abstract class GameObject implements Collidable {
             shapeRenderer.rect(x, y, width, height);
         }
     }
+
+
+
 
     public boolean isDestroyed() {
         return !active;
@@ -58,7 +83,26 @@ public abstract class GameObject implements Collidable {
     }
 
 
+
+
+    //Getter and Setter for both
+    public TextureRegion getSprite() {
+        return sprite;
+    }
+
+    public void setSprite(TextureRegion sprite) {
+        this.sprite = sprite;
+    }
+
+    public Animation<TextureRegion> getAnimation() {
+        return animation;
+    }
+
+    public void setAnimation(Animation<TextureRegion> animation) {
+        this.animation = animation;
+    }
     // Encapsulation: Getters and Setters
+
     public float getX() { return x; }
     public void setX(float x) { this.x = x; }
 

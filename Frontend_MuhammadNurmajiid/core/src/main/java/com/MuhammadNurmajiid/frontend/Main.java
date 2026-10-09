@@ -1,9 +1,14 @@
 package com.MuhammadNurmajiid.frontend;
 
+import com.MuhammadNurmajiid.frontend.systems.AssetManager;
+import com.MuhammadNurmajiid.frontend.systems.EntityFactory;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.MuhammadNurmajiid.frontend.objects.GameObject;
 import com.MuhammadNurmajiid.frontend.objects.Player;
@@ -12,15 +17,17 @@ import com.MuhammadNurmajiid.frontend.objects.enemies.Fairy;
 import com.MuhammadNurmajiid.frontend.objects.item.Item;
 import com.MuhammadNurmajiid.frontend.objects.item.ItemType;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class Main extends ApplicationAdapter {
     private ShapeRenderer shapeRenderer;
+    private SpriteBatch batch;
 
     private Player player;
-    private Fairy fairy;
+    private List<Fairy> fairy;
     private Boss boss;
     private Item powerItem;
     private Item pointItem;
@@ -28,28 +35,47 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void create() {
-        shapeRenderer = new ShapeRenderer();
+        // TODO 1:
+        // When initializing the renderer, create a SpriteBatch and store it in batch.
+        // LibGDX hint: new SpriteBatch().
+        batch = new SpriteBatch();
+        // TODO 2:
+        // Initialize the fairy and entities lists as empty ArrayLists.
+        fairy = new ArrayList<>();
         entities = new ArrayList<>();
 
-        // 1. Player: Red square (movable with W/A/S/D, shoots with Z)
-        player = new Player(280, 40, "Reimu Hakurei", 100, 15, 3);
+        // TODO 3:
+        // Before creating entities, get the AssetManager instance and call init().
+        AssetManager.getInstance().init();
 
-        // 2. Fairy: Pink square (stationary)
-        fairy = new Fairy(150, 380, "Stage 1 Fairy", 20);
+        // TODO 4:
+        player = EntityFactory.createPlayer(280, 40, "Reimu Hakurei", 100, 15, 3);
 
-        // 3. Boss: Blue square (stationary, larger size)
-        boss = new Boss(380, 400, "Cirno", 150);
 
-        // 4. Items: White squares (moving downwards linearly)
-        powerItem = new Item(200, 450, 16, 16, 80f, ItemType.POWER, 500L);
-        pointItem = new Item(320, 480, 12, 12, 120f, ItemType.POINT, 1000L);
+        Fairy RedFairy = EntityFactory.createFairy(150, 380, "Red Fairy", 20);
+        Fairy BlueFairy = EntityFactory.createFairy(250, 380,"Blue Fairy", 20, "fairy_idle_blue");
 
+        boss = EntityFactory.createBoss(380, 400, "Rumia", 150);
+
+        powerItem = EntityFactory.createItem(200, 450, ItemType.POWER);
+        powerItem = EntityFactory.createItem(320, 480, ItemType.POINT);
+
+        // Update how all entities are created! Follow the table and create Player, Fairy, Boss, and Item
+        // using the appropriate EntityFactory methods.
+        // Add both Fairies to the fairy list using add(...).
+
+        // TODO 5:
+        // Add all the objects you have just created to entities.
+        entities.add(RedFairy);
+        entities.add(BlueFairy);
         entities.add(player);
-        entities.add(fairy);
         entities.add(boss);
         entities.add(powerItem);
-        entities.add(pointItem);
-    }
+
+        }
+
+
+
 
     @Override
     public void render() {
@@ -89,6 +115,18 @@ public class Main extends ApplicationAdapter {
             }
         }
         shapeRenderer.end();
+
+        ScreenUtils.clear(0.1f, 0.1f, 0.15f, 1f);
+
+        batch.begin();
+        for (GameObject entity : entities) {
+            if (!entity.isDestroyed()) {
+                // TODO: Call each entity's .render() method with the SpriteBatch as its argument.
+                entity.render(batch);
+            }
+        }
+        batch.end();
+
     }
 
     // Non-static (Instance) Generic Method with Bounded Type Parameter <T extends GameObject>
@@ -110,5 +148,7 @@ public class Main extends ApplicationAdapter {
         if (shapeRenderer != null) {
             shapeRenderer.dispose();
         }
+        // TODO: Call dispose on AssetManager to release the loaded Textures as well.
+        AssetManager.getInstance().dispose();
     }
 }

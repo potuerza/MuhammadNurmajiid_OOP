@@ -1,4 +1,5 @@
-package com.MuhammadNurmajiid.frontend.objects;
+package com.MuhammadNurmajiid.frontend.objects.bullets;
+
 
 public enum BulletType {
     DANMAKU,

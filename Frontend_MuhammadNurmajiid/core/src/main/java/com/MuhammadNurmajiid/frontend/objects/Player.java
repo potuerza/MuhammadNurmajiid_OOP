@@ -1,5 +1,6 @@
 package com.MuhammadNurmajiid.frontend.objects;
 
+import com.MuhammadNurmajiid.frontend.systems.AssetManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -9,6 +10,8 @@ import com.MuhammadNurmajiid.frontend.objects.enemies.Boss;
 import com.MuhammadNurmajiid.frontend.objects.enemies.Enemy;
 import com.MuhammadNurmajiid.frontend.objects.enemies.Fairy;
 import com.MuhammadNurmajiid.frontend.objects.bullets.Bullet;
+import com.MuhammadNurmajiid.frontend.objects.bullets.BulletType;
+
 
 
 public class Player extends GameObject {
@@ -19,7 +22,7 @@ public class Player extends GameObject {
     private long score;
 
     public Player(String name, int hp, int power, int spellCards) {
-        super(280, 40, 32, 32, 200f, Color.RED);
+        super(280, 40, 32, 48, 200f, Color.RED);
         this.name = name;
         this.hp = hp;
         this.power = power;
@@ -28,7 +31,7 @@ public class Player extends GameObject {
     }
 
     public Player(float x, float y, String name, int hp, int power, int spellCards) {
-        super(x, y, 32, 32, 200f, Color.RED);
+        super(x, y, 32, 48, 200f, Color.RED);
         this.name = name;
         this.hp = hp;
         this.power = power;
@@ -38,7 +41,11 @@ public class Player extends GameObject {
 
     @Override
     public void update(float delta) {
-        // Player movement handling (LibGDX input)
+        // TODO 1: Call GameObject's update(delta) through super.
+        update(delta);
+        // TODO 2: Declare a local float variable dx with an initial value of 0
+        // (dx = delta x, tracks the change in horizontal direction for animation)
+        float dx = 0;
         if (Gdx.input != null) {
             if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
                 y += speed * delta;
@@ -48,10 +55,52 @@ public class Player extends GameObject {
             }
             if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
                 x -= speed * delta;
+
+                // TODO 3: Adjust dx to match the direction.
+                // (If you move left, what should happen to dx?)
+
             }
             if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 x += speed * delta;
+
+                // TODO 4: Adjust dx to match the direction.
+                // (If you move right, what should happen to dx?)
             }
+        }
+
+        updateAnimationState(dx);
+        // TODO 5: Call updateAnimationState(dx)
+    }
+
+    public void updateAnimationState(float dx) {
+        AssetManager assets = AssetManager.getInstance();
+        if (dx < 0) {
+            // TODO:
+            if(currentDir != -1){
+                currentDir = -1;
+            }
+            // 1. Only make the following changes if currentDir is not -1.
+            // 2. Set currentDir to -1.
+            // 3. Retrieve the "player_left" animation using assets.getAnimation(...).
+            //    Store it in a local variable of type Animation<TextureRegion> named anim.
+            // 4. If anim is not null, assign it using setAnimation(...).
+        } else if (dx > 0) {
+            // TODO:
+
+            // 1. Only make the following changes if currentDir is not 1.
+            // 2. Set currentDir to 1.
+            // 3. Retrieve the "player_right" animation using assets.getAnimation(...).
+            //    Store it in a local variable of type Animation<TextureRegion> named anim.
+            // 4. If anim is not null, assign it using setAnimation(...).
+        } else {
+            // TODO:
+
+            // 1. Only make the following changes if currentDir is not 0.
+            // 2. Set currentDir to 0.
+            // 3. Retrieve the "player_idle" animation using assets.getAnimation(...).
+            //    Store it in a local variable of type Animation<TextureRegion> named anim.
+            // 4. If anim is not null, assign it using setAnimation(...).
+
         }
     }
 

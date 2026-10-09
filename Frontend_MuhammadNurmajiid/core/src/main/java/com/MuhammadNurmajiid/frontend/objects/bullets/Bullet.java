@@ -4,7 +4,7 @@ package com.MuhammadNurmajiid.frontend.objects.bullets;
 import com.MuhammadNurmajiid.frontend.objects.Collidable;
 import com.MuhammadNurmajiid.frontend.objects.Player;
 import com.MuhammadNurmajiid.frontend.objects.GameObject;
-import com.MuhammadNurmajiid.frontend.objects.BulletType;
+import com.MuhammadNurmajiid.frontend.objects.bullets.BulletType;
 import com.MuhammadNurmajiid.frontend.objects.enemies.Enemy;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
