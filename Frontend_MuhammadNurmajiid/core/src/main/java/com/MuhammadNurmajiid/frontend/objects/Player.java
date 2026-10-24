@@ -1,6 +1,8 @@
 package com.MuhammadNurmajiid.frontend.objects;
 
 import com.MuhammadNurmajiid.frontend.systems.AssetManager;
+import com.MuhammadNurmajiid.frontend.systems.AudioManager;
+import com.MuhammadNurmajiid.frontend.systems.EntityFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -12,6 +14,8 @@ import com.MuhammadNurmajiid.frontend.objects.enemies.Fairy;
 import com.MuhammadNurmajiid.frontend.objects.bullets.Bullet;
 import com.MuhammadNurmajiid.frontend.objects.bullets.BulletType;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 
 public class Player extends GameObject {
@@ -20,6 +24,7 @@ public class Player extends GameObject {
     private int power;
     private int spellCards;
     private long score;
+    private int currentDir = 0;
 
     public Player(String name, int hp, int power, int spellCards) {
         super(280, 40, 32, 48, 200f, Color.RED);
@@ -39,10 +44,11 @@ public class Player extends GameObject {
         this.score = 0;
     }
 
+
     @Override
     public void update(float delta) {
         // TODO 1: Call GameObject's update(delta) through super.
-        update(delta);
+        super.update(delta);
         // TODO 2: Declare a local float variable dx with an initial value of 0
         // (dx = delta x, tracks the change in horizontal direction for animation)
         float dx = 0;
@@ -55,54 +61,74 @@ public class Player extends GameObject {
             }
             if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
                 x -= speed * delta;
-
                 // TODO 3: Adjust dx to match the direction.
                 // (If you move left, what should happen to dx?)
-
+                dx = -1;
             }
             if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 x += speed * delta;
-
                 // TODO 4: Adjust dx to match the direction.
                 // (If you move right, what should happen to dx?)
+                dx = 1;
             }
         }
-
-        updateAnimationState(dx);
+        if (Gdx.graphics != null) {
+            x = Math.max(0, Math.min(x, Gdx.graphics.getWidth() - width));
+            y = Math.max(0, Math.min(y, Gdx.graphics.getHeight() - height));
+        }
         // TODO 5: Call updateAnimationState(dx)
+        updateAnimationState(dx);
+
     }
+
 
     public void updateAnimationState(float dx) {
         AssetManager assets = AssetManager.getInstance();
         if (dx < 0) {
             // TODO:
-            if(currentDir != -1){
+            if (currentDir != -1) {
                 currentDir = -1;
+                // 1. Only make the following changes if currentDir is not -1.
+                // 2. Set currentDir to -1.
+                // 3. Retrieve the "player_left" animation using assets.getAnimation(...).
+                //    Store it in a local variable of type Animation<TextureRegion> named anim.
+                // 4. If anim is not null, assign it using setAnimation(...).
+                Animation<TextureRegion> anim = assets.getAnimation("player_left");
+                if (anim != null) {
+                    setAnimation(anim);
+                }
             }
-            // 1. Only make the following changes if currentDir is not -1.
-            // 2. Set currentDir to -1.
-            // 3. Retrieve the "player_left" animation using assets.getAnimation(...).
-            //    Store it in a local variable of type Animation<TextureRegion> named anim.
-            // 4. If anim is not null, assign it using setAnimation(...).
         } else if (dx > 0) {
             // TODO:
-
             // 1. Only make the following changes if currentDir is not 1.
             // 2. Set currentDir to 1.
             // 3. Retrieve the "player_right" animation using assets.getAnimation(...).
             //    Store it in a local variable of type Animation<TextureRegion> named anim.
             // 4. If anim is not null, assign it using setAnimation(...).
+            if (currentDir != 1) {
+                currentDir = 1;
+                Animation<TextureRegion> anim = assets.getAnimation("player_right");
+                if (anim != null) {
+                    setAnimation(anim);
+                }
+            }
         } else {
             // TODO:
-
             // 1. Only make the following changes if currentDir is not 0.
             // 2. Set currentDir to 0.
             // 3. Retrieve the "player_idle" animation using assets.getAnimation(...).
             //    Store it in a local variable of type Animation<TextureRegion> named anim.
             // 4. If anim is not null, assign it using setAnimation(...).
-
+            if (currentDir != 0) {
+                currentDir = 0;
+                Animation<TextureRegion> anim = assets.getAnimation("player_idle");
+                if (anim != null) {
+                    setAnimation(anim);
+                }
+            }
         }
     }
+
 
     public void moveUp(float delta) { this.y += speed * delta; }
     public void moveDown(float delta) { this.y -= speed * delta; }
@@ -133,15 +159,18 @@ public class Player extends GameObject {
         }
     }
 
+
     public Bullet shootBullet() {
         int damage = 10 + power;
         System.out.println(name + " shoots bullet dealing " + damage + " DMG!");
-        return new Bullet(x + width/2 - 4, y + height, BulletType.AMULET, damage);
+        AudioManager.getInstance().playSound("sfx_shoot");
+        return EntityFactory.createPlayerBullet(x + width / 2 - 4, y + height, damage);
 
         // TODO: return a new Bullet positioned at the top-center of the Player
         // (x + width/2 - 4, y + height), with BulletType.AMULET as its type,
         // and the damage calculated above
     }
+
 
 
     public void collectItem(Item item) {
@@ -174,6 +203,7 @@ public class Player extends GameObject {
             addScore(item.getScoreValue());
             System.out.println(name + " collected " + item.getItemType() + "!");
         }
+        AudioManager.getInstance().playSound("sfx_item");
         item.destroy();
 
     }

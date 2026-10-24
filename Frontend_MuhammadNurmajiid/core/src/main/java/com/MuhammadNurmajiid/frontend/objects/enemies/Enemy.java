@@ -1,5 +1,6 @@
 package com.MuhammadNurmajiid.frontend.objects.enemies;
 
+import com.MuhammadNurmajiid.frontend.systems.AudioManager;
 import com.badlogic.gdx.graphics.Color;
 import com.MuhammadNurmajiid.frontend.objects.Collidable;
 import com.MuhammadNurmajiid.frontend.objects.GameObject;
@@ -37,6 +38,7 @@ public class Enemy extends GameObject {
         System.out.println(name + " took " + damage + " damage! HP: " + this.hp + "/" + this.maxHp);
         if (wasAlive && this.hp == 0) {
             System.out.println(name + " was defeated!");
+            AudioManager.getInstance().playSound("sfx_enemy_die");
             destroy();
             return true;
         }

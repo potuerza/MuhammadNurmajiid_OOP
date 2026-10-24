@@ -20,6 +20,7 @@ public class Fairy extends Enemy {
 
     @Override
     public void update(float delta) {
+        super.update(delta);
         if (collisionCooldown > 0) {
             collisionCooldown -= delta;
         }

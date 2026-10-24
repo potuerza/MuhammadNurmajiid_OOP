@@ -5,10 +5,8 @@ import com.MuhammadNurmajiid.frontend.systems.EntityFactory;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.MuhammadNurmajiid.frontend.objects.GameObject;
 import com.MuhammadNurmajiid.frontend.objects.Player;
@@ -17,7 +15,8 @@ import com.MuhammadNurmajiid.frontend.objects.enemies.Fairy;
 import com.MuhammadNurmajiid.frontend.objects.item.Item;
 import com.MuhammadNurmajiid.frontend.objects.item.ItemType;
 
-import javax.swing.text.html.parser.Entity;
+import com.MuhammadNurmajiid.frontend.systems.AudioManager;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +35,7 @@ public class Main extends ApplicationAdapter {
     @Override
     public void create() {
         // TODO 1:
+        shapeRenderer = new ShapeRenderer();
         // When initializing the renderer, create a SpriteBatch and store it in batch.
         // LibGDX hint: new SpriteBatch().
         batch = new SpriteBatch();
@@ -47,6 +47,11 @@ public class Main extends ApplicationAdapter {
         // TODO 3:
         // Before creating entities, get the AssetManager instance and call init().
         AssetManager.getInstance().init();
+        AudioManager.getInstance().init();
+
+        AudioManager.getInstance().play("bgm_intro", "bgm_loop");
+
+
 
         // TODO 4:
         player = EntityFactory.createPlayer(280, 40, "Reimu Hakurei", 100, 15, 3);
@@ -58,7 +63,7 @@ public class Main extends ApplicationAdapter {
         boss = EntityFactory.createBoss(380, 400, "Rumia", 150);
 
         powerItem = EntityFactory.createItem(200, 450, ItemType.POWER);
-        powerItem = EntityFactory.createItem(320, 480, ItemType.POINT);
+        pointItem = EntityFactory.createItem(320, 480, ItemType.POINT);
 
         // Update how all entities are created! Follow the table and create Player, Fairy, Boss, and Item
         // using the appropriate EntityFactory methods.
@@ -66,11 +71,18 @@ public class Main extends ApplicationAdapter {
 
         // TODO 5:
         // Add all the objects you have just created to entities.
+        fairy.add(RedFairy);
+        fairy.add(BlueFairy);
+        entities.add(player);
         entities.add(RedFairy);
         entities.add(BlueFairy);
-        entities.add(player);
         entities.add(boss);
         entities.add(powerItem);
+        entities.add(pointItem);
+
+
+
+
 
         }
 
@@ -107,21 +119,9 @@ public class Main extends ApplicationAdapter {
         // 4. Clear screen
         ScreenUtils.clear(0.1f, 0.1f, 0.15f, 1f);
 
-        // 5. Render filled hitboxes with ShapeRenderer
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        for (GameObject entity : entities) {
-            if (!entity.isDestroyed()) {
-                entity.render(shapeRenderer);
-            }
-        }
-        shapeRenderer.end();
-
-        ScreenUtils.clear(0.1f, 0.1f, 0.15f, 1f);
-
         batch.begin();
         for (GameObject entity : entities) {
             if (!entity.isDestroyed()) {
-                // TODO: Call each entity's .render() method with the SpriteBatch as its argument.
                 entity.render(batch);
             }
         }
@@ -145,10 +145,13 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void dispose() {
+        if (batch != null) {
+            batch.dispose();
+        }
         if (shapeRenderer != null) {
             shapeRenderer.dispose();
         }
-        // TODO: Call dispose on AssetManager to release the loaded Textures as well.
         AssetManager.getInstance().dispose();
+        AudioManager.getInstance().dispose();
     }
 }

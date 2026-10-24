@@ -40,7 +40,7 @@ public abstract class GameObject implements Collidable {
     public void render(SpriteBatch batch) {
         if (batch != null && active) {
             if (animation != null) {
-                TextureRegion currentFrame = animation.getKeyFrame(stateTime, true);
+                TextureRegion currentFrame = animation.getKeyFrame(stateTime);
                 batch.draw(currentFrame, x, y, width, height);
             } else if (sprite != null) {
                 batch.draw(sprite, x, y, width, height);
@@ -129,10 +129,11 @@ public abstract class GameObject implements Collidable {
 
     public boolean isOffScreen(float screenWidth, float screenHeight) {
         final float offlimit = 50f;
-        return x < -offlimit || x > screenWidth*screenHeight || y < -offlimit || y > screenHeight*screenWidth;
+        return x < -offlimit || x > screenWidth + offlimit || y < -offlimit || y > screenHeight + offlimit;
         // Use a 50px tolerance margin on each side, so objects that have only
         // slightly passed the edge of the screen are not immediately considered gone.
     }
+
 
 }
 
