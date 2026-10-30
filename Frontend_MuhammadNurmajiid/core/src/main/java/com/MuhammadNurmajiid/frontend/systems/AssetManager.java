@@ -19,7 +19,6 @@ public class AssetManager {
 
     // Find out: why is the AssetManager constructor *private*?
     private AssetManager() {
-        // TODO: Initialize the three Maps above as empty HashMaps
         textureRegionMap = new HashMap<>();
         animationMap = new HashMap<>();
         textureMap = new HashMap<>();
@@ -28,7 +27,6 @@ public class AssetManager {
 
     // Global access point for the single instance
     public static AssetManager getInstance() {
-        // TODO: If instance is still null, create a new instance (Lazy Initialization)
         if (instance == null) {
             instance = new AssetManager();
         }
@@ -36,11 +34,9 @@ public class AssetManager {
         return instance;
         // Return the instance reference
 
-        //TODO 1: done
     }
 
     public Texture loadTexture(String filename) {
-        // TODO:
         if (textureMap.containsKey(filename)) {
             return textureMap.get(filename);
         }
@@ -67,8 +63,6 @@ public class AssetManager {
     // Register a single region
     public void registerRegion(String key, TextureRegion region) {
         textureRegionMap.put(key, region);
-
-        //TODO 2 = done
     }
 
 
@@ -77,7 +71,6 @@ public class AssetManager {
         Texture tex = loadTexture(filename);
         if (tex != null) {
             TextureRegion[][] grid = TextureRegion.split(tex, tileWidth, tileHeight);
-            // TODO: Store the region grid[row][col] in textureRegionMap under this key
             textureRegionMap.put(key, grid[row][col]);
 
         }
@@ -93,15 +86,6 @@ public class AssetManager {
         Texture tex = loadTexture(filename);
         if (tex != null) {
             TextureRegion[][] grid = TextureRegion.split(tex, tileWidth, tileHeight);
-
-            // TODO:
-            // 1. Create a TextureRegion[] array with numFrames elements
-            // 2. Fill the array with grid[row][startCol + i]
-            // 3. Create Animation<TextureRegion> anim = new Animation<>(frameDuration, frames);
-            // 4. Set the animation's play mode: anim.setPlayMode(playMode);
-            // 5. Store anim in animationMap under key
-            // 6. Store the first frame (frames[0]) in textureRegionMap under the same key (as the default sprite)
-
             TextureRegion[] frames = new TextureRegion[numFrames];
 
             for (int i = 0; i < numFrames; i++) {
@@ -126,8 +110,6 @@ public class AssetManager {
         Texture tex = loadTexture(filename);
         if (tex != null) {
             TextureRegion[][] grid = TextureRegion.split(tex, tileWidth, tileHeight);
-            // TODO: Follow the same steps as registerAnimationFromSheet, but copy each frame
-            // using 'new TextureRegion(...)', then call 'frame.flip(flipX, flipY)'
             TextureRegion[] frames = new TextureRegion[numFrames];
 
             for (int i = 0; i < numFrames; i++) {
@@ -168,29 +150,21 @@ public class AssetManager {
         // Tip 1: Explore values for row, startCol, numFrames, frameDuration, and Animation.PlayMode that look good to you.
         // Tip 2: Among the .png files registered below, which sprite sheets contain *animation* frames, and which contain *static images*? What does this mean for how you use them?
 
-        // TODO: Register Reimu Hakurei's idle animation (player.png: 32x48 per cell)
         registerAnimationFromSheet("player_idle", "player.png", 32, 48, 0, 8, 0.125f);
         registerAnimationFromSheet("player_left", "player.png", 32, 48, 1, 4, 0.12f);
         registerAnimationFromSheet("player_right", "player.png", 32, 48, 2, 4, 0.12f);
 
-
-
-        // TODO: Register the Boss's idle animation (rumia.png: 64x64 per cell)
         registerAnimationFromSheet("boss_idle", "rumia.png", 64, 64, 0, 4, 0.2f);
         registerAnimationFromSheet("boss_left", "rumia.png", 64, 64, 1, 0, 4, 0.15f, Animation.PlayMode.REVERSED);
         registerAnimationFromSheet("boss_right", "rumia.png", 64, 64, 2, 0, 4, 0.15f, Animation.PlayMode.NORMAL);
 
-        // TODO: Register the Fairy animations
         registerAnimationFromSheet("fairy_idle_red", "fairy.png", 32, 32, 1, 8, 0.125f);
         registerAnimationFromSheet("fairy_idle_blue", "fairy.png", 32, 32, 0, 8, 0.125f);
 
-        // TODO: Register the enemy bullet (bullets_small.png: 16x16 cell at row 2, column 3)
         registerRegionFromSheet("bullet_amulet", "amulet_reimu.png", 16, 16, 0, 0);
         registerRegionFromSheet("bullet_amulet_homing", "amulet_reimu.png", 16, 16, 1, 0);
         registerRegionFromSheet("bullet_danmaku", "bullets_small.png", 16, 16, 2, 3);
 
-
-        // TODO: Register the 4 Item variants (items.png: 16x16 per cell)
         registerRegionFromSheet("item_power", "items.png", 16, 16, 0, 0);
         registerRegionFromSheet("item_point", "items.png", 16, 16, 0, 1);
         registerRegionFromSheet("item_bomb", "items.png", 16, 16, 0, 3);
@@ -198,13 +172,11 @@ public class AssetManager {
     }
 
     public void dispose() {
-        // TODO: Release the VRAM resources of all loaded Textures, then clear all Maps
         for (Texture texture : textureMap.values()) {
             texture.dispose();
         }
         textureMap.clear();
         textureRegionMap.clear();
         animationMap.clear();
-        //TODO 3: DONE
     }
 }

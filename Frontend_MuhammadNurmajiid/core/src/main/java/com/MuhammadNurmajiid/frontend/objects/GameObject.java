@@ -33,7 +33,6 @@ public abstract class GameObject implements Collidable {
     }
 
     public void update(float delta) {
-        // TODO: Increase the object's internal time so its animation advances
         stateTime += delta;
     }
 

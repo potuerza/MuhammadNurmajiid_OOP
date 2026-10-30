@@ -1,11 +1,11 @@
 package com.MuhammadNurmajiid.frontend.objects;
 
+import com.MuhammadNurmajiid.frontend.objects.patterns.ShootingPattern;
+import com.MuhammadNurmajiid.frontend.objects.patterns.shootingStrategy.SpreadShot;
 import com.MuhammadNurmajiid.frontend.systems.AssetManager;
 import com.MuhammadNurmajiid.frontend.systems.AudioManager;
+import com.MuhammadNurmajiid.frontend.systems.BulletManager;
 import com.MuhammadNurmajiid.frontend.systems.EntityFactory;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.MuhammadNurmajiid.frontend.objects.item.Item;
 import com.MuhammadNurmajiid.frontend.objects.item.ItemType;
 import com.MuhammadNurmajiid.frontend.objects.enemies.Boss;
@@ -14,8 +14,14 @@ import com.MuhammadNurmajiid.frontend.objects.enemies.Fairy;
 import com.MuhammadNurmajiid.frontend.objects.bullets.Bullet;
 import com.MuhammadNurmajiid.frontend.objects.bullets.BulletType;
 
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
+
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 
 
 public class Player extends GameObject {
@@ -25,6 +31,12 @@ public class Player extends GameObject {
     private int spellCards;
     private long score;
     private int currentDir = 0;
+    private ShootingPattern shootingPattern = new SpreadShot(200f, 3, 30f);
+
+    // TODO: Declare a private field named shootingPattern of type ShootingPattern.
+    //       No need to initialize it right away.
+
+
 
     public Player(String name, int hp, int power, int spellCards) {
         super(280, 40, 32, 48, 200f, Color.RED);
@@ -45,12 +57,15 @@ public class Player extends GameObject {
     }
 
 
+
+
+
+
+
     @Override
     public void update(float delta) {
-        // TODO 1: Call GameObject's update(delta) through super.
-        super.update(delta);
-        // TODO 2: Declare a local float variable dx with an initial value of 0
-        // (dx = delta x, tracks the change in horizontal direction for animation)
+        super.update(delta); // Advances stateTime for idle animations
+        // Player movement handling (LibGDX input)
         float dx = 0;
         if (Gdx.input != null) {
             if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
@@ -61,74 +76,46 @@ public class Player extends GameObject {
             }
             if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
                 x -= speed * delta;
-                // TODO 3: Adjust dx to match the direction.
-                // (If you move left, what should happen to dx?)
-                dx = -1;
+                dx -= 1;
             }
             if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 x += speed * delta;
-                // TODO 4: Adjust dx to match the direction.
-                // (If you move right, what should happen to dx?)
-                dx = 1;
+                dx += 1;
             }
         }
-        if (Gdx.graphics != null) {
-            x = Math.max(0, Math.min(x, Gdx.graphics.getWidth() - width));
-            y = Math.max(0, Math.min(y, Gdx.graphics.getHeight() - height));
-        }
-        // TODO 5: Call updateAnimationState(dx)
-        updateAnimationState(dx);
+        x = Math.max(0, Math.min(x, Gdx.graphics.getWidth() - width));
+        y = Math.max(0, Math.min(y, Gdx.graphics.getHeight() - height));
 
+        updateAnimationState(dx);
     }
 
 
+
+
+
+    // Updates character animation state based on horizontal movement direction (dx)
     public void updateAnimationState(float dx) {
         AssetManager assets = AssetManager.getInstance();
-        if (dx < 0) {
-            // TODO:
+        if (dx < 0) { // Moving Left
             if (currentDir != -1) {
                 currentDir = -1;
-                // 1. Only make the following changes if currentDir is not -1.
-                // 2. Set currentDir to -1.
-                // 3. Retrieve the "player_left" animation using assets.getAnimation(...).
-                //    Store it in a local variable of type Animation<TextureRegion> named anim.
-                // 4. If anim is not null, assign it using setAnimation(...).
                 Animation<TextureRegion> anim = assets.getAnimation("player_left");
-                if (anim != null) {
-                    setAnimation(anim);
-                }
+                if (anim != null) setAnimation(anim);
             }
-        } else if (dx > 0) {
-            // TODO:
-            // 1. Only make the following changes if currentDir is not 1.
-            // 2. Set currentDir to 1.
-            // 3. Retrieve the "player_right" animation using assets.getAnimation(...).
-            //    Store it in a local variable of type Animation<TextureRegion> named anim.
-            // 4. If anim is not null, assign it using setAnimation(...).
+        } else if (dx > 0) { // Moving Right
             if (currentDir != 1) {
                 currentDir = 1;
                 Animation<TextureRegion> anim = assets.getAnimation("player_right");
-                if (anim != null) {
-                    setAnimation(anim);
-                }
+                if (anim != null) setAnimation(anim);
             }
-        } else {
-            // TODO:
-            // 1. Only make the following changes if currentDir is not 0.
-            // 2. Set currentDir to 0.
-            // 3. Retrieve the "player_idle" animation using assets.getAnimation(...).
-            //    Store it in a local variable of type Animation<TextureRegion> named anim.
-            // 4. If anim is not null, assign it using setAnimation(...).
+        } else { // Idle / Stationary
             if (currentDir != 0) {
                 currentDir = 0;
                 Animation<TextureRegion> anim = assets.getAnimation("player_idle");
-                if (anim != null) {
-                    setAnimation(anim);
-                }
+                if (anim != null) setAnimation(anim);
             }
         }
     }
-
 
     public void moveUp(float delta) { this.y += speed * delta; }
     public void moveDown(float delta) { this.y -= speed * delta; }
@@ -150,26 +137,52 @@ public class Player extends GameObject {
         }
     }
 
+    @Override
+    public Rectangle getCoreHitbox() {
+        // TODO: Return a new 8x8 Rectangle centered right in the middle of the sprite:
+        return new Rectangle(this.x + (width / 2f) - 4f, this.y + (height / 2f) - 4f, 8f, 8f);
+        // - X coordinate: x + (width / 2f) - 4f
+        // - Y coordinate: y + (height / 2f) - 4f
+        // - width: 8f, height: 8f
+    }
+
+
+    @Override
+    public Rectangle getGrazeHitbox() {
+        return new Rectangle(x, y, width, height);
+        // TODO: Return a new Rectangle at position coordinates (x, y)
+        //       covering the entire visual sprite dimensions (width, height)
+    }
+
+
     public void shoot(Enemy target) {
         int damage = 10 + getPower();
+        AudioManager.getInstance().playSound("sfx_shoot");
         System.out.println(getName() + " shoots " + target.getName() + " dealing " + damage + " DMG!");
         boolean defeated = target.takeDamage(damage);
         if (defeated) {
+            AudioManager.getInstance().playSound("sfx_enemy_die");
             addScore(target.getScoreValue());
         }
     }
 
-
-    public Bullet shootBullet() {
-        int damage = 10 + power;
-        System.out.println(name + " shoots bullet dealing " + damage + " DMG!");
-        AudioManager.getInstance().playSound("sfx_shoot");
-        return EntityFactory.createPlayerBullet(x + width / 2 - 4, y + height, damage);
-
-        // TODO: return a new Bullet positioned at the top-center of the Player
-        // (x + width/2 - 4, y + height), with BulletType.AMULET as its type,
-        // and the damage calculated above
+    // TODO: Update shootBullet() to shootBullet(BulletManager bulletManager)!
+    public void shootBullet(BulletManager bulletManager) {
+        if (bulletManager == null) {
+            return;
+        }
+        if (shootingPattern != null) {
+            shootingPattern.execute(x + width / 2f - 8f, y + height, bulletManager, true);
+        }
+        else {
+            int damage = 10 + power;
+            bulletManager.spawnPlayerBullet(x + width / 2f - 8f, y + height, 0f, 400f, damage);
+            // - If bulletManager is null, return immediately
+            // - If shootingPattern is not null, call execute() from the player's muzzle coordinates (x + width / 2f - 8f, y + height)
+            // - If shootingPattern is null, call bulletManager.spawnPlayerBullet() directly
+        }
     }
+
 
 
 
@@ -228,6 +241,14 @@ public class Player extends GameObject {
     }
 
     // Encapsulation getters and setters
+    public ShootingPattern getShootingPattern() {
+        return shootingPattern;
+    }
+
+    public void setShootingPattern(ShootingPattern shootingPattern) {
+        this.shootingPattern = shootingPattern;
+    }
+
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 

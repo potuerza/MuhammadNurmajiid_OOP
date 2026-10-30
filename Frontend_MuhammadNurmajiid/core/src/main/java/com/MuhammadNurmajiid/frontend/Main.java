@@ -1,12 +1,12 @@
 package com.MuhammadNurmajiid.frontend;
 
-import com.MuhammadNurmajiid.frontend.systems.AssetManager;
-import com.MuhammadNurmajiid.frontend.systems.EntityFactory;
+import com.MuhammadNurmajiid.frontend.systems.*;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.MuhammadNurmajiid.frontend.objects.GameObject;
 import com.MuhammadNurmajiid.frontend.objects.Player;
@@ -14,8 +14,6 @@ import com.MuhammadNurmajiid.frontend.objects.enemies.Boss;
 import com.MuhammadNurmajiid.frontend.objects.enemies.Fairy;
 import com.MuhammadNurmajiid.frontend.objects.item.Item;
 import com.MuhammadNurmajiid.frontend.objects.item.ItemType;
-
-import com.MuhammadNurmajiid.frontend.systems.AudioManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,28 +30,36 @@ public class Main extends ApplicationAdapter {
     private Item pointItem;
     private List<GameObject> entities;
 
+    private BulletManager bulletManager;
+    private CollisionReferee collisionReferee;
+
+    private void updateEnemyScheduler(float delta) {
+        enemyShootTimer += delta;
+        if (enemyShootTimer >= 1.5f) {
+            boss.shootBullet(bulletManager);
+            enemyShootTimer = 0f;
+        }
+    }
+
     @Override
     public void create() {
-        // TODO 1:
         shapeRenderer = new ShapeRenderer();
         // When initializing the renderer, create a SpriteBatch and store it in batch.
         // LibGDX hint: new SpriteBatch().
         batch = new SpriteBatch();
-        // TODO 2:
         // Initialize the fairy and entities lists as empty ArrayLists.
         fairy = new ArrayList<>();
         entities = new ArrayList<>();
+        bulletManager = new BulletManager();
+        collisionReferee = new CollisionReferee();
 
-        // TODO 3:
+
         // Before creating entities, get the AssetManager instance and call init().
         AssetManager.getInstance().init();
         AudioManager.getInstance().init();
 
         AudioManager.getInstance().play("bgm_intro", "bgm_loop");
 
-
-
-        // TODO 4:
         player = EntityFactory.createPlayer(280, 40, "Reimu Hakurei", 100, 15, 3);
 
 
@@ -69,7 +75,6 @@ public class Main extends ApplicationAdapter {
         // using the appropriate EntityFactory methods.
         // Add both Fairies to the fairy list using add(...).
 
-        // TODO 5:
         // Add all the objects you have just created to entities.
         fairy.add(RedFairy);
         fairy.add(BlueFairy);
@@ -79,12 +84,10 @@ public class Main extends ApplicationAdapter {
         entities.add(boss);
         entities.add(powerItem);
         entities.add(pointItem);
+        bulletManager.add(bulletManager);
+        collisionReferee.add(collisionReferee);
 
-
-
-
-
-        }
+    }
 
 
 
@@ -93,30 +96,24 @@ public class Main extends ApplicationAdapter {
     public void render() {
         float delta = Gdx.graphics.getDeltaTime();
 
-        // 1. Check Player Bullet shooting input (Key Z)
+        // TODO: Create player input. If key Z is pressed call
         if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
-            entities.add(player.shootBullet());
+            player.shootBullet(bulletManager);
         }
 
-        // 2. Generic update & safe removal of off-screen/destroyed entities using non-static instance method
+        // TODO: Periodic firing scheduler for Boss Rumia
+        updateEnemyScheduler(delta);
+
+        // TODO: Generic update & clean for standard entities (Player, Enemy, Item)
         updateAndClean(entities, delta, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        // 3. Collision detection between active entities
-        for (int i = 0; i < entities.size(); i++) {
-            for (int j = i + 1; j < entities.size(); j++) {
-                GameObject a = entities.get(i);
-                GameObject b = entities.get(j);
+        // TODO: Update and recycle Object Pool
 
-                if (!a.isDestroyed() && !b.isDestroyed()) {
-                    if (a.getCoreHitbox().overlaps(b.getCoreHitbox())) {
-                        a.onCollision(b);
-                        b.onCollision(a);
-                    }
-                }
-            }
-        }
+        // TODO: Evaluate & resolve all collisions via Mediator Pattern
 
-        // 4. Clear screen
+
+
+        // TODO: Clear screen
         ScreenUtils.clear(0.1f, 0.1f, 0.15f, 1f);
 
         batch.begin();
@@ -125,9 +122,12 @@ public class Main extends ApplicationAdapter {
                 entity.render(batch);
             }
         }
-        batch.end();
 
+        // TODO: Render all active bullets from the pool
+
+        batch.end();
     }
+
 
     // Non-static (Instance) Generic Method with Bounded Type Parameter <T extends GameObject>
     public <T extends GameObject> void updateAndClean(List<T> list, float delta, float screenWidth, float screenHeight) {
