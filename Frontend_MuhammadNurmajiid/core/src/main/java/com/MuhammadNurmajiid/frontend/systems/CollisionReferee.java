@@ -21,11 +21,13 @@ public class CollisionReferee {
         // - Loop through each bullet in the ActivePlayerBullets list.
         for (Bullet bullet : bulletManager.getActivePlayerBullets()) {
             if (bullet.isDestroyed()) continue;
+            if (player.isDestroyed()) continue;
             for (GameObject entity : entities) {
                 if (entity instanceof Enemy enemy && !enemy.isDestroyed()) {
                     if (bullet.getCoreHitbox().overlaps(enemy.getCoreHitbox())) {
                         boolean defeated = enemy.takeDamage(bullet.getDamage());
                         if (defeated) {
+                            player.addScore(enemy.getScoreValue());
                             newDrops.add(EntityFactory.createItem(enemy.getX(), enemy.getY(), ItemType.POWER));
                         }
                         // Core Business Logic:
@@ -56,65 +58,63 @@ public class CollisionReferee {
         // TODO Code for Question 4:
         for (Bullet bullet : bulletManager.getActiveEnemyBullets()) {
             if (bullet.isDestroyed()) continue;
+            if (player.isDestroyed()) continue;
 
-            for (GameObject entity : entities) {
-                if (bullet.getCoreHitbox().overlaps(player.getCoreHitbox())) {
-                    player.takeDamage(bullet.getDamage());
-                    bullet.destroy();
-                }
-
-                else if (!bullet.hasBeenGrazed() && bullet.getCoreHitbox().overlaps(player.getCoreHitbox()) ) {
-                    bullet.setGrazed(true);
-                    player.addScore(50);
-                }
-
-                    // Core Business Logic:
-                    // Enemy takes damage, player gets score, etc.
-                    // Bullet gets marked to be destroyed
-                    newDrops.add(EntityFactory.createItem(player.getX(), player.getY(), ItemType.POWER));
-                    bullet.destroy();
-                }
+            if (bullet.getCoreHitbox().overlaps(player.getCoreHitbox())) {
+                player.takeDamage(bullet.getDamage());
+                bullet.destroy();
             }
 
+            else if (!bullet.hasBeenGrazed() &&
+                bullet.getCoreHitbox().overlaps(player.getGrazeHitbox())) {
+                bullet.setGrazed(true);
+                player.addScore(50);
+                // Core Business Logic:
+                // Enemy takes damage, player gets score, etc.
+                // Bullet gets marked to be destroyed
 
 
 
-            // - Loop through each bullet in ActiveEnemyBullets.
-            //   - If the bullet is already destroyed, skip it (continue)
-            //
-            //   - Check if player is not destroyed (destroyed), then:
-            //
-            //     - PRIORITY 1: Core Hit (Player was Shot)
-            //       - Check whether the bullet's Core Hitbox collides with the player's Core Hitbox.
-            //       - If YES:
-            //         * Deal damage to the player: player.takeDamage(bullet.getDamage())
-            //         * Mark the bullet as destroyed / destroy the bullet.
-            //
-            //     - PRIORITY 2: Graze Hit (Bullet Grazes Player)
-            //       - Check if the bullet has NOT been grazed yet
-            //         AND the bullet's Core Hitbox touches the player's Graze Hitbox.
-            //       - If YES:
-            //         * Mark the bullet as grazed.
-            //         * Give the graze score bonus to the player: player.addScore(50)
+
+                // - Loop through each bullet in ActiveEnemyBullets.
+                //   - If the bullet is already destroyed, skip it (continue)
+                //
+                //   - Check if player is not destroyed (destroyed), then:
+                //
+                //     - PRIORITY 1: Core Hit (Player was Shot)
+                //       - Check whether the bullet's Core Hitbox collides with the player's Core Hitbox.
+                //       - If YES:
+                //         * Deal damage to the player: player.takeDamage(bullet.getDamage())
+                //         * Mark the bullet as destroyed / destroy the bullet.
+                //
+                //     - PRIORITY 2: Graze Hit (Bullet Grazes Player)
+                //       - Check if the bullet has NOT been grazed yet
+                //         AND the bullet's Core Hitbox touches the player's Graze Hitbox.
+                //       - If YES:
+                //         * Mark the bullet as grazed.
+                //         * Give the graze score bonus to the player: player.addScore(50)
+            }
+        }
+
 
 
             // 3. Evaluate Player vs Items and Physical Enemy Contact
             // TODO Code for Question 5:
-
             for (GameObject entity : entities) {
-                if (entity.isDestroyed()){
+                if (entity.isDestroyed()) {
                     continue;
                 }
 
-                if (entity instanceof Item item){
-                    if (item.getCoreHitbox().overlaps(player.getCoreHitbox()) || item.getCoreHitbox().overlaps(player.getGrazeHitbox())){
+                if (entity instanceof Item item) {
+                    if (item.getCoreHitbox().overlaps(player.getCoreHitbox()) ||
+                        item.getCoreHitbox().overlaps(player.getGrazeHitbox())) {
                         player.collectItem(item);
                     }
                 }
 
-                if (entity instanceof Enemy enemy){
-                    if(player.getCoreHitbox().overlaps(enemy.getCoreHitbox())){
-                    player.takeDamage(10);
+                if (entity instanceof Enemy enemy) {
+                    if (player.getCoreHitbox().overlaps(enemy.getCoreHitbox())) {
+                        player.takeDamage(10);
                     }
                 }
             }

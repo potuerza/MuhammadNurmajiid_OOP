@@ -1,5 +1,6 @@
 package com.MuhammadNurmajiid.frontend;
 
+import com.MuhammadNurmajiid.frontend.objects.bullets.Bullet;
 import com.MuhammadNurmajiid.frontend.systems.*;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -30,6 +31,7 @@ public class Main extends ApplicationAdapter {
     private Item pointItem;
     private List<GameObject> entities;
 
+    private float enemyShootTimer = 0f;
     private BulletManager bulletManager;
     private CollisionReferee collisionReferee;
 
@@ -84,8 +86,6 @@ public class Main extends ApplicationAdapter {
         entities.add(boss);
         entities.add(powerItem);
         entities.add(pointItem);
-        bulletManager.add(bulletManager);
-        collisionReferee.add(collisionReferee);
 
     }
 
@@ -108,15 +108,16 @@ public class Main extends ApplicationAdapter {
         updateAndClean(entities, delta, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // TODO: Update and recycle Object Pool
+        bulletManager.update(delta, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // TODO: Evaluate & resolve all collisions via Mediator Pattern
-
-
+        collisionReferee.resolveCollisions(player, entities, bulletManager);
 
         // TODO: Clear screen
         ScreenUtils.clear(0.1f, 0.1f, 0.15f, 1f);
 
         batch.begin();
+
         for (GameObject entity : entities) {
             if (!entity.isDestroyed()) {
                 entity.render(batch);
@@ -124,6 +125,17 @@ public class Main extends ApplicationAdapter {
         }
 
         // TODO: Render all active bullets from the pool
+        for (Bullet bullet : bulletManager.getActivePlayerBullets()) {
+            if (!bullet.isDestroyed()) {
+                bullet.render(batch);
+            }
+        }
+
+        for (Bullet bullet : bulletManager.getActiveEnemyBullets()) {
+            if (!bullet.isDestroyed()) {
+                bullet.render(batch);
+            }
+        }
 
         batch.end();
     }

@@ -38,6 +38,7 @@ import com.MuhammadNurmajiid.frontend.objects.item.Item;
             System.out.println(name + " took " + damage + " damage! HP: " + this.hp + "/" + this.maxHp);
             if (wasAlive && this.hp == 0) {
                 System.out.println(name + " was defeated!");
+                AudioManager.getInstance().playSound("sfx_enemy_die");
                 destroy();
                 return true;
             }

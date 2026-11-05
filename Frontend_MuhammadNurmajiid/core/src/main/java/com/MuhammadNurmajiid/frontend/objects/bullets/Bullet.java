@@ -138,8 +138,8 @@ public class Bullet extends GameObject {
     public void update(float delta) {
         super.update(delta);
         // TODO:
-        this.vx += this.speed * delta;
-        this.vy += this.speed * delta;
+        this.x += this.vx * delta;
+        this.y += this.vy * delta;
         // 1. Update position x by adding velocity component vx multiplied by delta
         // 2. Update position y by adding velocity component vy multiplied by delta
     }

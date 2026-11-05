@@ -31,7 +31,7 @@ public class Player extends GameObject {
     private int spellCards;
     private long score;
     private int currentDir = 0;
-    private ShootingPattern shootingPattern = new SpreadShot(200f, 3, 30f);
+    private ShootingPattern shootingPattern;
 
     // TODO: Declare a private field named shootingPattern of type ShootingPattern.
     //       No need to initialize it right away.
@@ -171,6 +171,7 @@ public class Player extends GameObject {
         if (bulletManager == null) {
             return;
         }
+        AudioManager.getInstance().playSound("sfx_shoot");
         if (shootingPattern != null) {
             shootingPattern.execute(x + width / 2f - 8f, y + height, bulletManager, true);
         }

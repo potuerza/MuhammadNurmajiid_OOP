@@ -5,8 +5,6 @@ import com.MuhammadNurmajiid.frontend.objects.bullets.BulletType;
 import com.MuhammadNurmajiid.frontend.systems.EntityFactory;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-
-import javax.swing.text.html.parser.Entity;
 import java.util.*;
 
 public class BulletManager {
@@ -41,7 +39,7 @@ public class BulletManager {
             bullet = EntityFactory.createPlayerBullet(x, y, damage);
         }
         bullet.init(x, y, vx, vy, BulletType.AMULET, damage, true);
-        activeEnemyBullets.add(bullet);
+        activePlayerBullets.add(bullet);
         return bullet;
         // 1. Check whether playerBulletPool is not empty.
         //    If so, poll from the pool. If not, create a new one using the Factory.
@@ -54,12 +52,12 @@ public class BulletManager {
     public Bullet spawnEnemyBullet(float x, float y, float vx, float vy, int damage) {
         Bullet bullet;
         // TODO:
-        if (!playerBulletPool.isEmpty()) {
-            bullet = playerBulletPool.poll();
+        if (!enemyBulletPool.isEmpty()) {
+            bullet = enemyBulletPool.poll();
         } else {
             bullet = EntityFactory.createEnemyBullet(x, y, damage);
         }
-        bullet.init(x, y, vx, vy, BulletType.AMULET, damage, true);
+        bullet.init(x, y, vx, vy, BulletType.DANMAKU, damage, false);
         activeEnemyBullets.add(bullet);
         return bullet;
         // 1. Check whether enemyBulletPool is not empty:
@@ -94,7 +92,6 @@ public class BulletManager {
         //     * Safely remove the bullet from the active bullet list
         //     * Return the bullet to the pool queue
 
-
         // Safe update & recycling of active player bullets using an Iterator
         Iterator<Bullet> pIter = activePlayerBullets.iterator();
         while (pIter.hasNext()) {
@@ -108,24 +105,24 @@ public class BulletManager {
             }
         }
 
-            // 2. Enemy bullet recycling & movement (5 Points)
-            // TODO:
-            Iterator<Bullet> eIter = activeEnemyBullets.iterator();
-            while (eIter.hasNext()) {
-                Bullet bullet = eIter.next();
-                bullet.update(delta);
+        // 2. Enemy bullet recycling & movement (5 Points)
+        // TODO:
+        Iterator<Bullet> eIter = activeEnemyBullets.iterator();
+        while (eIter.hasNext()) {
+            Bullet bullet = eIter.next();
+            bullet.update(delta);
 
-                if (bullet.isOffScreen(screenWidth, screenHeight) || bullet.isDestroyed()) {
-                    eIter.remove();                 // Remove safely during traversal
-                    bullet.destroy();               // Reset active flag
-                    enemyBulletPool.offer(bullet); // Return to pool for reuse!
-                }
+            if (bullet.isOffScreen(screenWidth, screenHeight) || bullet.isDestroyed()) {
+                eIter.remove();                 // Remove safely during traversal
+                bullet.destroy();               // Reset active flag
+                enemyBulletPool.offer(bullet); // Return to pool for reuse!
             }
-            // - Follow the exact same procedure as above for activeEnemyBullets
-            // - Enemy bullets that go off-screen or are destroyed are returned to enemyBulletPool via offer()
         }
+        // - Follow the exact same procedure as above for activeEnemyBullets
+        // - Enemy bullets that go off-screen or are destroyed are returned to enemyBulletPool via offer()
 
 
+    }
 
         // Helper methods to access pools and active lists
         public List<Bullet> getActivePlayerBullets () {
@@ -143,4 +140,5 @@ public class BulletManager {
 
 
     }
+
 
