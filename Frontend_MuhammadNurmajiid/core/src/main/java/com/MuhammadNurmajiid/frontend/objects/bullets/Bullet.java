@@ -19,14 +19,6 @@ public class Bullet extends GameObject {
     boolean isPlayerBullet;
     boolean grazed;
 
-
-    // TODO: Declare the following private attributes:
-    // 1. float vx and vy (2D velocity vector components)
-    // 2. float angle initialized to 90f (visual rotation angle in degrees)
-    // 3. boolean isPlayerBullet (flag indicating whether this bullet belongs to the player or an enemy)
-    // 4. boolean grazed (flag indicating whether this bullet has already been grazed by the player)
-
-
     // Overloaded constructor with custom speed
     public Bullet(float x, float y, float speed, BulletType bulletType, int damage) {
         super(x, y, 16, 16, speed, Color.YELLOW);
@@ -84,12 +76,6 @@ public class Bullet extends GameObject {
         return damage;
     }
 
-    // TODO:
-    // 1. Create getters for isPlayerBullet, vx, and vy
-    // 2. Create a getter and setter for angle
-    // 3. Create a getter hasBeenGrazed() that returns the grazed attribute
-    // 4. Create a setter setGrazed(boolean grazed)
-
     public boolean isPlayerBullet() {
         return isPlayerBullet;
     }
@@ -123,7 +109,6 @@ public class Bullet extends GameObject {
     public void render(SpriteBatch batch) {
         if (batch != null && active) {
             if (sprite != null) {
-                // TODO: Draw the bullet sprite using batch.draw() with the following parameters:
                 batch.draw(sprite, x, y, width/2f, height/2f,width,height,1f,1f,angle-90f);
                 // sprite, position (x, y), rotation pivot origin at center (width / 2f, height / 2f),
                 // dimensions (width, height), scale (1f, 1f), and rotation angle (angle - 90f)
@@ -137,7 +122,6 @@ public class Bullet extends GameObject {
     @Override
     public void update(float delta) {
         super.update(delta);
-        // TODO:
         this.x += this.vx * delta;
         this.y += this.vy * delta;
         // 1. Update position x by adding velocity component vx multiplied by delta

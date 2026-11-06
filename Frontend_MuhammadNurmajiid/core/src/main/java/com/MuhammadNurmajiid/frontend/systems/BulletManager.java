@@ -1,8 +1,11 @@
 package com.MuhammadNurmajiid.frontend.systems;
 
+import com.MuhammadNurmajiid.frontend.objects.GameObject;
 import com.MuhammadNurmajiid.frontend.objects.bullets.Bullet;
 import com.MuhammadNurmajiid.frontend.objects.bullets.BulletType;
+import com.MuhammadNurmajiid.frontend.objects.item.ItemType;
 import com.MuhammadNurmajiid.frontend.systems.EntityFactory;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.*;
@@ -18,20 +21,17 @@ public class BulletManager {
 
 
     public BulletManager() {
-        // TODO:
         playerBulletPool = new LinkedList<>();
         enemyBulletPool = new LinkedList<>();
 
         activePlayerBullets = new ArrayList<>();
         activeEnemyBullets = new ArrayList<>();
-
         // 1. Initialize playerBulletPool and enemyBulletPool as empty LinkedLists
         // 2. Initialize activePlayerBullets and activeEnemyBullets as empty ArrayLists
     }
 
     // Borrowing Player Bullet from Pool (5 Points)
     public Bullet spawnPlayerBullet(float x, float y, float vx, float vy, int damage) {
-        // TODO:
         Bullet bullet;
         if (!playerBulletPool.isEmpty()) {
             bullet = playerBulletPool.poll();
@@ -41,17 +41,11 @@ public class BulletManager {
         bullet.init(x, y, vx, vy, BulletType.AMULET, damage, true);
         activePlayerBullets.add(bullet);
         return bullet;
-        // 1. Check whether playerBulletPool is not empty.
-        //    If so, poll from the pool. If not, create a new one using the Factory.
-        // 2. Re-initialize the bullet.
-        // 3. Add the bullet to the activePlayerBullets list.
-        // 4. Return the bullet instance.
     }
 
     // Borrowing Enemy Bullet from Pool (5 Points)
     public Bullet spawnEnemyBullet(float x, float y, float vx, float vy, int damage) {
         Bullet bullet;
-        // TODO:
         if (!enemyBulletPool.isEmpty()) {
             bullet = enemyBulletPool.poll();
         } else {
@@ -67,6 +61,7 @@ public class BulletManager {
         // 4. Return the bullet instance
     }
 
+
     public void render(SpriteBatch batch) {
         for (Bullet b : activePlayerBullets) {
             if (!b.isDestroyed()) b.render(batch);
@@ -78,21 +73,7 @@ public class BulletManager {
 
     public void update(float delta, float screenWidth, float screenHeight) {
         // 1. Player bullet recycling & movement (5 Points)
-        // TODO:
 
-        // - Copy-paste the iterator loop from updateAndClean() in Main.java
-        // - Change the class referenced by the iterator to `Bullet` instead of
-
-        //   and change the referenced list to activePlayerBullets
-        // - Change the check to whether the bullet is off-screen
-        //   OR the bullet is already marked as destroyed
-
-        //   - If YES:
-        //     * Mark the bullet as destroyed (destroy)
-        //     * Safely remove the bullet from the active bullet list
-        //     * Return the bullet to the pool queue
-
-        // Safe update & recycling of active player bullets using an Iterator
         Iterator<Bullet> pIter = activePlayerBullets.iterator();
         while (pIter.hasNext()) {
             Bullet bullet = pIter.next();
@@ -106,7 +87,6 @@ public class BulletManager {
         }
 
         // 2. Enemy bullet recycling & movement (5 Points)
-        // TODO:
         Iterator<Bullet> eIter = activeEnemyBullets.iterator();
         while (eIter.hasNext()) {
             Bullet bullet = eIter.next();
@@ -138,6 +118,48 @@ public class BulletManager {
             return enemyBulletPool.size();
         }
 
+    // Spell Card (Bomb) Execution: Clear all active enemy bullets and convert them into POINT item drops!
+    public void clearEnemyBullets(List<GameObject> entities) {
+        // TODO:
+        // 1. Create an Iterator<Bullet> to safely traverse activeEnemyBullets.
+        Iterator<Bullet> eIter = activeEnemyBullets.iterator();
+        while (eIter.hasNext()) {
+            Bullet bullet = eIter.next();
+
+            if (entities != null) {
+                entities.add(EntityFactory.createItem(bullet.getX(), bullet.getY(), ItemType.POINT));
+            }
+
+            bullet.destroy();
+            eIter.remove();
+            enemyBulletPool.offer(bullet);
+        }
+    }
+
+            // 2. While the iterator has a next element:
+            //    - Retrieve the current Bullet object.
+            //    - If the entities parameter is not null:
+            //      * Create an Item object of type ItemType.POINT using EntityFactory.createItem(...)
+            //        at position (bullet.getX(), bullet.getY()), then add it to the entities list.
+            //    - Mark the bullet as destroyed (bullet.destroy()).
+            //    - Remove the bullet from activeEnemyBullets using remove() on the iterator from step 1.
+            //    - Return the bullet to the enemyBulletPool queue using offer().
+            // TIP: See the rough outline in `clearPlayerBullets()` below
+
+        public void clearEnemyBullets () {
+            clearEnemyBullets(null);
+        }
+
+        // Clear all player bullets when restarting the game (Copy-Paste):
+        public void clearPlayerBullets () {
+            Iterator<Bullet> pIter = activePlayerBullets.iterator();
+            while (pIter.hasNext()) {
+                Bullet bullet = pIter.next();
+                bullet.destroy();
+                pIter.remove();
+                playerBulletPool.offer(bullet);
+            }
+        }
 
     }
 
