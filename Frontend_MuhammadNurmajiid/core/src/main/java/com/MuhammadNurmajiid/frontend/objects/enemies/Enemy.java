@@ -1,5 +1,8 @@
 package com.MuhammadNurmajiid.frontend.objects.enemies;
 
+import com.MuhammadNurmajiid.frontend.objects.EntityShooter;
+import com.MuhammadNurmajiid.frontend.objects.patterns.ShootingPattern;
+import com.MuhammadNurmajiid.frontend.objects.patterns.entityStrategy.EntityMovementPattern;
 import com.MuhammadNurmajiid.frontend.systems.AudioManager;
 import com.badlogic.gdx.graphics.Color;
 import com.MuhammadNurmajiid.frontend.objects.Collidable;
@@ -7,27 +10,22 @@ import com.MuhammadNurmajiid.frontend.objects.GameObject;
 import com.MuhammadNurmajiid.frontend.objects.Player;
 import com.MuhammadNurmajiid.frontend.objects.item.Item;
 
-    public class Enemy extends GameObject {
+    public class Enemy extends EntityShooter {
         protected String name;
         protected int hp;
         protected int maxHp;
         protected long scoreValue;
 
-        public Enemy(String name, int hp) {
-            super(200, 380, 24, 24, 0, Color.PINK);
-            this.name = name;
-            this.hp = hp;
-            this.maxHp = hp;
-            this.scoreValue = 100;
-        }
 
-        public Enemy(float x, float y, float width, float height, Color color, String name, int hp, long scoreValue) {
-            super(x, y, width, height, 0, color);
+
+        public Enemy(float x, float y, float width, float height, Color color, String name, int hp, long scoreValue, ShootingPattern shootingPattern, EntityMovementPattern movementPattern) {
+            super(x, y, width, height, 0, color, shootingPattern, movementPattern);
             this.name = name;
             this.hp = hp;
             this.maxHp = hp;
             this.scoreValue = scoreValue;
         }
+
 
         public boolean takeDamage(int damage) {
             boolean wasAlive = isAlive();
@@ -67,5 +65,21 @@ import com.MuhammadNurmajiid.frontend.objects.item.Item;
         public void setScoreValue(long scoreValue) { this.scoreValue = scoreValue; }
     }
 
+    /*
+    public Enemy(String name, int hp) {
+            super(200, 380, 24, 24, 0, Color.PINK);
+            this.name = name;
+            this.hp = hp;
+            this.maxHp = hp;
+            this.scoreValue = 100;
+        }
 
+        public Enemy(float x, float y, float width, float height, Color color, String name, int hp, long scoreValue) {
+            super(x, y, width, height, 0, color);
+            this.name = name;
+            this.hp = hp;
+            this.maxHp = hp;
+            this.scoreValue = scoreValue;
+        }
+       */
 

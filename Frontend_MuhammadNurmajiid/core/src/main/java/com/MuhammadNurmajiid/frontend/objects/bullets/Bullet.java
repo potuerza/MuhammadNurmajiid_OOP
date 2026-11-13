@@ -5,14 +5,20 @@ import com.MuhammadNurmajiid.frontend.objects.Collidable;
 import com.MuhammadNurmajiid.frontend.objects.GameObject;
 import com.MuhammadNurmajiid.frontend.objects.bullets.BulletType;
 import com.MuhammadNurmajiid.frontend.objects.enemies.Enemy;
+import com.MuhammadNurmajiid.frontend.objects.patterns.bulletStrategy.BulletMovementPattern;
 import com.badlogic.gdx.graphics.Color;
+
+import com.MuhammadNurmajiid.frontend.objects.patterns.bulletStrategy.HomingBulletMovement;
 
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+
+
 public class Bullet extends GameObject {
     private  BulletType bulletType;
     private int damage;
+    private BulletMovementPattern movementPattern;
 
     float vx, vy;
     float angle = 90f;
@@ -62,8 +68,9 @@ public class Bullet extends GameObject {
             // 4. Save the bullet's identity attributes (bulletType, damage, and isPlayerBullet) from the parameters
             // 5. Reactivate this bullet and reset its animation state time from 0
             // 6. Make sure the grazed status is reset to inactive so this recycled bullet can be grazed again
+        this.movementPattern = null;
 
-        }
+    }
 
 
 
@@ -104,6 +111,8 @@ public class Bullet extends GameObject {
         this.grazed = grazed;
     }
 
+    public BulletMovementPattern getMovementPattern() { return movementPattern; }
+    public void setMovementPattern(BulletMovementPattern movementPattern) { this.movementPattern = movementPattern; }
 
     @Override
     public void render(SpriteBatch batch) {
@@ -122,11 +131,17 @@ public class Bullet extends GameObject {
     @Override
     public void update(float delta) {
         super.update(delta);
-        this.x += this.vx * delta;
-        this.y += this.vy * delta;
-        // 1. Update position x by adding velocity component vx multiplied by delta
-        // 2. Update position y by adding velocity component vy multiplied by delta
+        // TODO (6 points):
+        // Check whether movementPattern is not null:
+        if (movementPattern != null){
+            movementPattern.move(this, delta);
+        }
+            else {
+            x += vx * delta;
+            y += vy * delta;
+        }
     }
+
 
 
 

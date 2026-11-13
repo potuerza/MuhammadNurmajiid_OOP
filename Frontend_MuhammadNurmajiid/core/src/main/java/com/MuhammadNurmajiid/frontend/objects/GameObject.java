@@ -85,6 +85,13 @@ public abstract class GameObject implements Collidable {
 
 
     //Getter and Setter for both
+
+    public void setActive(boolean active) { this.active = active; }
+
+    public float getStateTime() { return stateTime; }
+    public void setStateTime(float stateTime) { this.stateTime = stateTime; }
+
+
     public TextureRegion getSprite() {
         return sprite;
     }
